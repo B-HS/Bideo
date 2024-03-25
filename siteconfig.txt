@@ -1,2 +1,0 @@
-SITE_TITLE = SITE_TITLE
-FOLDER_PATH = /Users/hyunseokbyun/Desktop/bideo
