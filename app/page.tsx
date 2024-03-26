@@ -15,9 +15,9 @@ const Home = async () => {
             {data
                 .filter((ele) => ele.type === 'file')
                 .map((ele, idx) => (
-                    <section key={idx} className='w-full overflow-hidden'>
+                    <section key={idx} className='w-full'>
                         <p>{topPath + ele.name}</p>
-                        <VideoJsPlayer options={{ controls: true }} sources={`/video/${ele.name}`} />
+                        <VideoJsPlayer options={{ controls: false, responsive: true, audioOnlyMode: false }} sources={`/video/${ele.name}`} />
                     </section>
                 ))}
         </div>
