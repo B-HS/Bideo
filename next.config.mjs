@@ -6,8 +6,7 @@ const nextConfig = {
             'process.env.FLUENTFFMPEG_COV': false
         }))
         return config
-    },
-    reactStrictMode: false
+    }
 };
 
 export default nextConfig;
