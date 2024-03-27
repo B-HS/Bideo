@@ -12,12 +12,16 @@ const Home = async () => {
                     <span>{ele.name}</span>
                 </section>
             ))}
+            <VideoJsPlayer
+                options={{ controls: false, fluid: true }}
+                sources={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'}
+            />
             {data
                 .filter((ele) => ele.type === 'file')
                 .map((ele, idx) => (
                     <section key={idx} className='w-full'>
                         <p>{topPath + ele.name}</p>
-                        <VideoJsPlayer options={{ controls: false, responsive: true, audioOnlyMode: false }} sources={`/video/${ele.name}`} />
+                        <VideoJsPlayer options={{ controls: false, fluid: true }} sources={`/video/${ele.name}`} />
                     </section>
                 ))}
         </div>
