@@ -14,17 +14,14 @@ import { Button } from './ui/button'
 import { VideoSlider } from './ui/video-slider'
 import { usePlay } from './video-component/usePlay'
 import { useVideo } from './video-component/useVideo'
-
 dayjs.extend(duration)
+
 type Props = {
-    // 영상의 URL, 혹은 URL배열
     sources: string | { src: string; type: string }[]
-    // 영상 옵션
     options?: VideoJsOptions
-    //플레이어 준비 완료 시 호출 될 콜백
     onReady?: (player?: Player) => void
 }
-// techlab.q-co.jp/articles/134 사이트에서.., 압도적 감사.. ㅠㅠ
+
 export const VideoJsPlayer: FC<Props> = ({ sources, options: opt, onReady }) => {
     const [isFullscreen, setIsFullscreen] = useState(false)
     const [currentTime, setCurrentTime] = useState(0)
