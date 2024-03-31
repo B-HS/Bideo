@@ -1,17 +1,19 @@
-import { VideoExtensionName } from '@/constant/videoExtensionList'
-
-import { randomUUID } from 'crypto'
 import fs from 'fs'
 import path from 'path'
+import { promisify } from 'util'
+
+const readdir = promisify(fs.readdir)
+const stat = promisify(fs.stat)
 
 export const topPath = path.join(process.cwd(), 'public')
-export const getFolder = async (folderPath?: string) => {
-    const elements = fs.readdirSync(path.join(topPath, folderPath || '')) as string[]
-    const folder = elements
-        .filter((ele) => fs.statSync(path.join(path.join(topPath, folderPath || ''), ele)).isDirectory())
-        .map((ele) => ({ type: 'folder', name: ele }))
-    const files = elements
-        .filter((ele) => VideoExtensionName.includes(ele.split('.').pop() || 'NONE'))
-        .map((ele) => ({ type: 'file', name: `${ele}/`, tempId: randomUUID() }))
-    return [...folder, ...files] as { type: 'folder' | 'file'; name: string }[]
+export const getFolder = async (folderPath: string = ''): Promise<{ type: 'folder' | 'file'; name: string }[]> => {
+    const fullPath = path.join(topPath, folderPath)
+    const elements = await readdir(fullPath)
+    return await Promise.all(
+        elements.map(async (name) => {
+            const stats = await stat(path.join(fullPath, name))
+            const type: 'folder' | 'file' = stats.isDirectory() ? 'folder' : 'file'
+            return { type, name }
+        }),
+    )
 }
