@@ -1,12 +1,13 @@
-import PathManager from '@/components/path-manager'
 import { Button } from '@/components/ui/button'
 import { getFolder } from '@/util/files'
-import { File, Folder } from 'lucide-react'
+import { File, Folder, Video } from 'lucide-react'
 import Link from 'next/link'
 import path from 'path'
 
 const FolderFileList = async ({ folderPath }: { folderPath?: string }) => {
     const data = await getFolder(folderPath)
+    const isMp4 = (fileName: string) => fileName.split('.').pop() === 'mp4'
+
     return (
         <section className='flex flex-col items-start'>
             {data.map((ele, idx) =>
@@ -18,11 +19,18 @@ const FolderFileList = async ({ folderPath }: { folderPath?: string }) => {
                         </Link>
                     </Button>
                 ) : (
-                    <Button className='justify-start p-0 cursor-pointer w-full' variant={'ghost'} asChild key={idx}>
-                        <section className='flex gap-2 text-start'>
-                            <File />
-                            <span>{ele.name}</span>
-                        </section>
+                    <Button className='justify-start p-0 cursor-pointer w-full gap-2' variant={'ghost'} asChild key={idx}>
+                        {isMp4(ele.name) ? (
+                            <Link href={`/play/${ele.name}?path=${folderPath}`}>
+                                <Video />
+                                <span>{ele.name}</span>
+                            </Link>
+                        ) : (
+                            <Link href={`${folderPath}/${ele.name}`} download={true}>
+                                <File />
+                                <span>{ele.name}</span>
+                            </Link>
+                        )}
                     </Button>
                 ),
             )}
