@@ -6,7 +6,7 @@ import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Maximize, Minimize, Pause, Play } from 'lucide-react'
-import { FC, MutableRefObject, useRef, useState } from 'react'
+import { FC, MutableRefObject, useEffect, useRef, useState } from 'react'
 import Player from 'video.js/dist/types/player'
 import 'video.js/dist/video-js.css'
 import { Badge } from './ui/badge'
@@ -14,6 +14,7 @@ import { Button } from './ui/button'
 import { VideoSlider } from './ui/video-slider'
 import { usePlay } from './video-component/usePlay'
 import { useVideo } from './video-component/useVideo'
+import { useFullscreen } from './video-component/useFullscreen'
 dayjs.extend(duration)
 
 type Props = {
@@ -23,17 +24,17 @@ type Props = {
 }
 
 export const VideoJsPlayer: FC<Props> = ({ sources, options: opt, onReady }) => {
-    const [isFullscreen, setIsFullscreen] = useState(false)
     const [currentTime, setCurrentTime] = useState(0)
     const [fullTime, setFullTime] = useState(0)
     const [buffered, setBuffered] = useState(0)
     const videoRef = useRef<HTMLVideoElement | Element | null>(null)
     const playerRef = useRef<Player | null>(null)
+    const { isFullscreen, setIsFullscreen, handleFullscreen } = useFullscreen(playerRef)
     const { handlePlay, isPlay, setIsPlay } = usePlay(playerRef)
     const { handleProgress } = useVideo(playerRef, videoRef, sources, opt, onReady, setCurrentTime, setFullTime, setIsPlay, isPlay, setBuffered)
 
     return (
-        <div className={cn('relative h-fit group overflow-hidden', isFullscreen && 'absolute inset-0 w-[99.25dvw] z-[9999] bg-black')}>
+        <div className={cn('relative h-fit group overflow-hidden')}>
             <video
                 onContextMenu={(e) => e.preventDefault()}
                 data-vjs-player
@@ -90,12 +91,7 @@ export const VideoJsPlayer: FC<Props> = ({ sources, options: opt, onReady }) => 
                         </section>
                     </section>
                     <section className='w-fit flex justify-end'>
-                        <Button
-                            variant={'ghost'}
-                            size={'icon'}
-                            onClick={() => setIsFullscreen(!isFullscreen)}
-                            className='p-2 rounded-none text-background/50'
-                        >
+                        <Button variant={'ghost'} size={'icon'} onClick={() => handleFullscreen()} className='p-2 rounded-none text-background/50'>
                             {isFullscreen ? <Minimize /> : <Maximize />}
                         </Button>
                     </section>
