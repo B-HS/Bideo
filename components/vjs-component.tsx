@@ -15,6 +15,7 @@ import { VideoSlider } from './ui/video-slider'
 import { usePlay } from './video-component/usePlay'
 import { useVideo } from './video-component/useVideo'
 import { useFullscreen } from './video-component/useFullscreen'
+import { useKey } from './video-component/useKey'
 dayjs.extend(duration)
 
 type Props = {
@@ -29,10 +30,10 @@ export const VideoJsPlayer: FC<Props> = ({ sources, options: opt, onReady }) => 
     const [buffered, setBuffered] = useState(0)
     const videoRef = useRef<HTMLVideoElement | Element | null>(null)
     const playerRef = useRef<Player | null>(null)
-    const { isFullscreen, setIsFullscreen, handleFullscreen } = useFullscreen(playerRef)
+    const { isFullscreen, handleFullscreen } = useFullscreen(playerRef)
     const { handlePlay, isPlay, setIsPlay } = usePlay(playerRef)
     const { handleProgress } = useVideo(playerRef, videoRef, sources, opt, onReady, setCurrentTime, setFullTime, setIsPlay, isPlay, setBuffered)
-
+    useKey(playerRef)
     return (
         <div className={cn('relative h-fit group overflow-hidden')}>
             <video
