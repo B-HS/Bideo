@@ -3,6 +3,7 @@ import { getFolder } from '@/util/files'
 import { File, Folder, Video } from 'lucide-react'
 import Link from 'next/link'
 import path from 'path'
+import ElementContextMenu from './element-contextmenu'
 
 const FolderFileList = async ({ folderPath }: { folderPath?: string }) => {
     const data = await getFolder(folderPath)
@@ -26,10 +27,14 @@ const FolderFileList = async ({ folderPath }: { folderPath?: string }) => {
                                 <span>{ele.name}</span>
                             </Link>
                         ) : (
-                            <Link href={`${folderPath}/${ele.name}`} download={true}>
-                                <File />
-                                <span>{ele.name}</span>
-                            </Link>
+                            <ElementContextMenu path={`${folderPath}/${ele.name}`}>
+                                <Button className='justify-start p-0 cursor-pointer w-full gap-2' variant={'ghost'} asChild key={idx}>
+                                    <div className='flex w-full gap-2 cursor-pointer p-0 justify-start'>
+                                        <File />
+                                        <span>{ele.name}</span>
+                                    </div>
+                                </Button>
+                            </ElementContextMenu>
                         )}
                     </Button>
                 ),
